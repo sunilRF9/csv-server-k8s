@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: csv-server-2
+  name: csv-server-2
+spec:
+  containers:
+  - image: infracloudio/csvserver:latest
+    name: csv-server-2
+    env:
+      - name: CSVSERVER_BORDER
+        valueFrom:
+          secretKeyRef:
+            name: csv-secret
+            key: CSVSERVER_BORDER
+    ports:
+    - containerPort: 9300
+    volumeMounts:
+      - name: inputfile
+        mountPath: "/csvserver/inputdata"
+        subPath: "inputFile"
+  volumes:
+    - name: inputfile
+      configMap:
+        name: csv-ip

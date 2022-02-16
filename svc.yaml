@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: csv-server-2
+  name: csv-svc
+spec:
+  ports:
+  - port: 9300
+    protocol: TCP
+    targetPort: 9300
+  selector:
+    run: csv-server-2
+status:
+  loadBalancer: {}

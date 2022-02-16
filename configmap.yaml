@@ -1,0 +1,20 @@
+apiVersion: v1
+data:
+  inputFile: |
+    1,20789
+    2,1407
+    3,23357
+    4,12281
+    5,9157
+    6,27344
+    7,9688
+    8,9550
+    9,13305
+    10,12444
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2022-02-16T07:48:37Z"
+  name: csv-ip
+  namespace: default
+  resourceVersion: "565"
+  uid: a6a2daa1-ff50-4bec-9d2a-e1932ad2b28a
