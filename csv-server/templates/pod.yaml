@@ -5,9 +5,9 @@ metadata:
     run: {{ .Values.pod.name }}
   name: {{ .Values.pod.name }}
   annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/path: "/metrics"
-    prometheus.io/port: "9300"
+    prometheus.io/scrape: "{{ .Values.annotations.scrape }}"
+    prometheus.io/path: "{{ .Values.annotations.path }}"
+    prometheus.io/port: "{{ .Values.annotations.port }}"
 spec:
   containers:
   - image: {{ .Values.image.repository }}
