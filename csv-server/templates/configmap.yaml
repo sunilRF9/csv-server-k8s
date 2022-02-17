@@ -13,8 +13,5 @@ data:
     10,12444
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2022-02-16T07:48:37Z"
-  name: csv-ip
-  namespace: default
-  resourceVersion: "565"
-  uid: a6a2daa1-ff50-4bec-9d2a-e1932ad2b28a
+  name: {{ .Values.configmap.name }}
+  namespace: {{ .Values.pod.namespace }}

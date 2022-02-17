@@ -1,0 +1,31 @@
+pod:
+  name: csv-server
+  namespace: default
+
+image:
+  repository: infracloudio/csvserver:latest
+
+service:
+  name: csv-svc
+  port: 9300
+  protocol: TCP
+
+annotations:
+  scrape: true
+  port: 9300
+  path: /metrics
+
+env:
+  name: CSVSERVER_BORDER
+
+secret:
+  name: csv-secret
+  value: T3Jhbmdl
+
+mountpath:
+  name: "/csvserver/inputdata"
+  filename: "inputFile"
+  volname: inputfile
+
+configmap:
+  name: csv-ip
