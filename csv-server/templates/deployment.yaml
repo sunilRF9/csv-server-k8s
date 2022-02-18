@@ -2,21 +2,25 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: csv-server
-  name: csv-server
+    app: {{ .Values.deployment.name }}
+  name: {{ .Values.deployment.name }}
+  annotations:
+    prometheus.io/scrape: "{{ .Values.annotations.scrape }}"
+    prometheus.io/path: "{{ .Values.annotations.path }}"
+    prometheus.io/port: "{{ .Values.annotations.port }}"
 spec:
-  replicas: 5
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      app: csv-server
+      app: {{ .Values.deployment.name }}
   template:
     metadata:
       labels:
-        app: csv-server
+        app: {{ .Values.deployment.name }}
     spec:
       initContainers:
-      - name: init
-        image: bash:4.4
+      - name: {{ .Values.initcontainer.name }}
+        image: {{ .Values.initcontainer.image }}
         command: ["bash"]
         args: ["./csvserver/gencsv.sh"]
         volumeMounts:
@@ -26,14 +30,14 @@ spec:
           - name: inputdata
             mountPath: "/csvserver"
       containers:
-      - image: infracloudio/csvserver:latest
-        name: csvserver
+      - image: {{ .Values.image.repository }}
+        name: {{ .Values.deployment.name }}
         env:
-          - name: CSVSERVER_BORDER
+          - name: {{ .Values.env.name }}
             valueFrom:
               secretKeyRef:
-                name: csv-secret
-                key: CSVSERVER_BORDER
+                name: {{ .Values.secret.name }}
+                key: {{ .Values.env.name }}
         ports:
         - containerPort: 9300
         volumeMounts:
@@ -45,5 +49,5 @@ spec:
           emptyDir: {}
         - name: gencsv
           configMap:
-            name: gencsv
+            name: {{ .Values.configmap.name }}
             defaultMode: 0755
