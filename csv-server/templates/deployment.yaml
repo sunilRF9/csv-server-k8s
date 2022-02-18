@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.deployment.name }}
+  name: {{ .Values.deployment.name }}
+  annotations:
+    prometheus.io/scrape: "{{ .Values.annotations.scrape }}"
+    prometheus.io/path: "{{ .Values.annotations.path }}"
+    prometheus.io/port: "{{ .Values.annotations.port }}"
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+    spec:
+      initContainers:
+      - name: {{ .Values.initcontainer.name }}
+        image: {{ .Values.initcontainer.image }}
+        command: ["bash"]
+        args: ["./csvserver/gencsv.sh"]
+        volumeMounts:
+          - name: gencsv
+            mountPath: "/csvserver/gencsv.sh"
+            subPath: "gencsv.sh"
+          - name: inputdata
+            mountPath: "/csvserver"
+      containers:
+      - image: {{ .Values.image.repository }}
+        name: {{ .Values.deployment.name }}
+        env:
+          - name: {{ .Values.env.name }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secret.name }}
+                key: {{ .Values.env.name }}
+        ports:
+        - containerPort: 9300
+        volumeMounts:
+          - name: inputdata
+            mountPath: "/csvserver/inputdata"
+            subPath: "inputdata"
+      volumes:
+        - name: inputdata
+          emptyDir: {}
+        - name: gencsv
+          configMap:
+            name: {{ .Values.configmap.name }}
+            defaultMode: 0755
