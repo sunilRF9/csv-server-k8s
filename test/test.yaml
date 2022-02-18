@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: csv-server-test
+  name: csv-server-test
+spec:
+  initContainers:
+  - name: init-myservice
+    image: infracloudio/csvserver:latest
+    command: ["sh", "/csvserver/gencsv.sh"]
+    volumeMounts:
+      - name: gencsv
+        mountPath: "/csvserver/gencsv.sh"
+        subPath: "gencsv.sh"
+  containers:
+  - image: infracloudio/csvserver:latest
+    name: csv-server-2
+    env:
+      - name: CSVSERVER_BORDER
+        valueFrom:
+          secretKeyRef:
+            name: csv-secret
+            key: CSVSERVER_BORDER
+    ports:
+    - containerPort: 9300
+    volumeMounts:
+      - name: inputfile
+        mountPath: "/csvserver/inputdata"
+        subPath: "inputFile"
+      - name: gencsv
+        mountPath: "/csvserver/gencsv.sh"
+        subPath: "gencsv.sh"
+  volumes:
+    - name: inputfile
+      configMap:
+        name: csv-ip
+    - name: gencsv
+      configMap:
+        name: gencsv

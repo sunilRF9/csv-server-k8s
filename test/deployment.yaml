@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: csv-server
+  name: csv-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csv-server
+  template:
+    metadata:
+      labels:
+        app: csv-server
+    spec:
+      containers:
+      - image: infracloudio/csvserver:latest
+        name: csvserver
+        env:
+          - name: CSVSERVER_BORDER
+            valueFrom:
+              secretKeyRef:
+                name: csv-secret
+                key: CSVSERVER_BORDER
+        lifecycle:
+          postStart:
+            exec:
+              command: ["bash", "-c", "./csvserver/gencsv.sh"]
+        ports:
+        - containerPort: 9300
+        volumeMounts:
+          - name: gencsv
+            mountPath: "/csvserver/gencsv.sh"
+            subPath: "gencsv.sh"
+      volumes:
+        - name: gencsv
+          configMap:
+            name: gencsv
+            defaultMode: 0755

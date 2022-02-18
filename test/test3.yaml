@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: csv-server-poststart
+  name: csv-server-poststart
+spec:
+  containers:
+  - image: infracloudio/csvserver:latest
+    name: csv-server-poststart
+    lifecycle:
+      postStart:
+        exec:
+          command: ["/bin/bash","-c","/csvserver/gencsv.sh"]
+    env:
+      - name: CSVSERVER_BORDER
+        valueFrom:
+          secretKeyRef:
+            name: csv-secret
+            key: CSVSERVER_BORDER
+    ports:
+    - containerPort: 9300
+    volumeMounts:
+      - name: inputfile
+        mountPath: "/csvserver/inputdata"
+        subPath: "inputFile"
+      - name: gencsv
+        mountPath: "/csvserver/gencsv.sh"
+        subPath: "gencsv.sh"
+  volumes:
+    - name: inputfile
+      configMap:
+        name: csv-ip
+        defaultMode: 0755
+    - name: gencsv
+      configMap:
+        name: gencsv
+        defaultMode: 0755
