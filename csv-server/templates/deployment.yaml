@@ -4,10 +4,6 @@ metadata:
   labels:
     app: {{ .Values.deployment.name }}
   name: {{ .Values.deployment.name }}
-  annotations:
-    prometheus.io/scrape: "{{ .Values.annotations.scrape }}"
-    prometheus.io/path: "{{ .Values.annotations.path }}"
-    prometheus.io/port: "{{ .Values.annotations.port }}"
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
@@ -15,6 +11,10 @@ spec:
       app: {{ .Values.deployment.name }}
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "{{ .Values.annotations.scrape }}"
+        prometheus.io/path: "{{ .Values.annotations.path }}"
+        prometheus.io/port: "{{ .Values.annotations.port }}"
       labels:
         app: {{ .Values.deployment.name }}
     spec:

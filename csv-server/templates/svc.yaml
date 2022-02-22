@@ -1,6 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    prometheus.io/scrape: "{{ .Values.annotations.scrape }}"
+    prometheus.io/path: "{{ .Values.annotations.path }}"
+    prometheus.io/port: "{{ .Values.annotations.port }}"
   labels:
     app: {{ .Values.deployment.name }}
   name: {{ .Values.service.name }}
