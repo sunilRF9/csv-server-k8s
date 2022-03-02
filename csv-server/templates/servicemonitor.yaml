@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: {{ .Values.deployment.name }}
+    app.kubernetes.io/managed-by: Helm
+    release: prometheus
+  name: {{ .Values.serviceMonitor.name }}
+  namespace: {{ .Values.deployment.namespace }}
+spec:
+  endpoints:
+  - port: http-metrics
+    path: /metrics
+    scrapeTimeout: 3s
+  namespaceSelector:
+    matchNames:
+    - {{ .Values.deployment.namespace }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+      app.kubernetes.io/managed-by: Helm

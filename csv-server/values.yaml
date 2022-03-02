@@ -38,3 +38,7 @@ mountpath:
 
 configmap:
   name: gencsv
+
+serviceMonitor:
+  name: kube-prometheus-csvserver
+
