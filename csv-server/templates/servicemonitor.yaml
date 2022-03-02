@@ -2,11 +2,11 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app: csv-server
+    app: {{ .Values.deployment.name }}
     app.kubernetes.io/managed-by: Helm
     release: prometheus
-  name: prometheus-kube-prometheus-csv-server
-  namespace: default
+  name: {{ .Values.serviceMonitor.name }}
+  namespace: {{ .Values.deployment.namespace }}
 spec:
   endpoints:
   - port: http-metrics
@@ -14,8 +14,8 @@ spec:
     scrapeTimeout: 3s
   namespaceSelector:
     matchNames:
-    - default
+    - {{ .Values.deployment.namespace }}
   selector:
     matchLabels:
-      app: csv-server
+      app: {{ .Values.deployment.name }}
       app.kubernetes.io/managed-by: Helm
