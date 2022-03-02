@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: csv-svc
+    release: prometheus
+  name: csv-server-svc-monitor
+  namespace: default
+spec:
+  jobLabel: csv-svc
+  endpoints:
+  - port: http-metrics
+    path: /metrics
+    scheme: http
+    scrapeTimeout: 30s
+  namespaceSelector:
+    matchNames:
+    - default
+  selector:
+    matchLabels:
+      app: csv-svc
+      app.kubernetes.io/instance: prometheus
