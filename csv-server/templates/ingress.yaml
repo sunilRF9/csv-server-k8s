@@ -3,6 +3,10 @@ kind: Ingress
 metadata:
   name: csvserver-ingress
 spec:
+  tls:
+  - hosts:
+      - "csvserver.example.com"
+    secretName: tls-demo-secret
   ingressClassName: nginx
   rules:
   - host: "csvserver.example.com"
