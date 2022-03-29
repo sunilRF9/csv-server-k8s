@@ -1,1 +1,5 @@
 test/
+*.key
+*.crt
+*.csr
+tls-demo-sec.yaml
