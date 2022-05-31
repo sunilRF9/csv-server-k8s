@@ -31,3 +31,8 @@ helm install prometheus prometheus-community/kube-prometheus-stack
 
 #### Install csv server using Helm
 helm install csvserver-helm csv-server/ -f csv-server/values.yaml
+
+kubectl create secret tls tls-demo-secret --key csvserver.example.com.key --cert csvserver.example.com.crt
+kubectl apply -f csv-server/templates/ingress.yaml
+
+#curl -vsH "Host:csvserver.example.com" --resolve "csvserver.example.com:443:$INGRESS_IP" --cacert example.com.crt "https://csvserver.example.com
