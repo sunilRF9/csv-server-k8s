@@ -36,3 +36,5 @@ kubectl create secret tls tls-demo-secret --key csvserver.example.com.key --cert
 kubectl apply -f csv-server/templates/ingress.yaml
 
 #curl -vsH "Host:csvserver.example.com" --resolve "csvserver.example.com:443:$INGRESS_IP" --cacert example.com.crt "https://csvserver.example.com
+# Install Loki
+helm install loki-stack grafana/loki-stack --values loki-stack.yaml -n loki --create-namespace
